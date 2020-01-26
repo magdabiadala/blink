@@ -6,7 +6,7 @@ import pygame as pg
 import pandas as pd
 import filterlib as flt
 import blink as blk
-import time
+import time, random
 #from pyOpenBCI import OpenBCIGanglion
 
 
@@ -103,50 +103,175 @@ if __name__ == "__main__":
         if quit_program.is_set():
             break'''
 
-    pg.init()
-    #tworzenie okienka
-    win = pg.display.set_mode((400,400))
-    #opis okienka
-    pg.display.set_caption("Symulator stacji benzynowej")
+### ZMIENNE ###
 
-    #zmienne
     run = True
-    #get_ticks zwraca liczbę milisekund od wywołania pg.init()
-    sec1 = int(pg.time.get_ticks()/1000)
+    sec1 = 0
     sec2 = 0
     cnt = 0
-    X = 400
+    X = 800
     Y = 400
     green = (0, 255, 0)
     black = (0, 0, 0)
+    red = (255, 0, 0)
+    #losuje liczbę
+    rnd = random.randint(3, 10)
+    #zamienia ją na stringa
+    number = str(rnd)
+
+### INICJALIZACJA GRY ###
+
+    pg.init()
+    #tworzenie okienka
+    win = pg.display.set_mode((X, Y))
+    #opis okienka
+    pg.display.set_caption("Symulator stacji benzynowej")
     #wybór czcionki
     font = pg.font.Font('freesansbold.ttf', 32)
-    #tekst do wyświetlenia
-    text = font.render("0", True, green, black)
-    #umieszcza tekst na prostokącie
-    textRect = text.get_rect()
+
+### EKRAN POCZĄTKOWY ###
+
+    #instrukcja
+    ins_txt1 = "Mrugnij, gdy licznik będzie równy"
+    ins_txt2 = "czerwonej liczbie na górze okienka."
+    #wygląd instrukcji
+    instructions1 = font.render(ins_txt1, True, green, black)
+    instructions2 = font.render(ins_txt2, True, green, black)
+    #umieszcza instrukcję na prostokącie
+    insRect1 = instructions1.get_rect()
+    insRect2 = instructions2.get_rect()
     #umieszcza prostokąt z tekstem na środku okienka
-    textRect.center = (X // 2, Y // 2)
+    insRect1.center = (X // 2, Y // 3)
+    insRect2.center = (X // 2, Y * (2/3))
+    #nałożenie instrukcji na prostokąt (warstwy)
+    win.blit(instructions1, insRect1)
+    win.blit(instructions2, insRect2)
+    #odświeżenie okienka
+    pg.display.flip()
+    #czeka 5 sekund - czas na przeczytanie
+    pg.time.delay(1000)
+
+    #wyświetla czarny ekran po instrukcji
+    pg.draw.rect(win, black, (0, 0, 800, 400))
+    pg.display.flip()
+    pg.time.delay(1000)
+
+    #wyświetla wylosowaną liczbę
+    ran_num = font.render(number, True, red, black)
+    textRect1 = ran_num.get_rect()
+    textRect1.center = (X // 2, Y // 4)
+    win.blit(ran_num, textRect1)
+    pg.display.flip()
+    pg.time.delay(1000)
+
+### ODLICZANIE ###
+    i = 1
+    l = 3
+    countdown = font.render("Odliczanie", True, green, black)
+    cRect = countdown.get_rect()
+    cRect.center = (X // 2, Y // 2)
+    win.blit(countdown, cRect)
+    pg.display.flip()
+    pg.time.delay(1000)
+    pg.draw.rect(win, black, (0, 150, 800, 250))
+    pg.display.flip()
+    while i<4:
+        l = str(l)
+        licznik = font.render(l, True, green, black)
+        rect = licznik.get_rect()
+        rect.center = (X // 2, Y // 2)
+        win.blit(licznik, rect)
+        pg.display.flip()
+        pg.time.delay(1000)
+        l = int(l)
+        l -=1
+        i +=1
+    start = font.render("START", True, green, black)
+    sRect = start.get_rect()
+    sRect.center = (X // 2, Y // 2)
+    win.blit(start, sRect)
+    pg.display.flip()
+    pg.time.delay(1000)
+    pg.draw.rect(win, black, (0, 150, 800, 250))
+    pg.display.flip()
+
+### GRA ###
+
+    text = font.render("", True, green, black)
+    textRect2 = text.get_rect()
+    textRect2.center = (X // 2, Y // 2)
+    win.blit(text, textRect2)
+    pg.display.flip()
+    #TU!
+    #get_ticks zwraca liczbę milisekund od wywołania pg.init()
+    sec1 = int(pg.time.get_ticks()/1000)
+#    print(pg.time.get_ticks())
+
+    blink.value = 0
+    print(blink.value)
 
     while run:
-        #cały for zadziała tylko jak będziesz chciała zamknąc okienko
-        for event in pg.event.get():
+        #stara wersja wychodzenia z gry
+        '''for event in pg.event.get():
             if event.type == pg.QUIT:
-                run = False
-        #znowu milisekundy od pg.init()
+                run = False'''
+
+        # jeśli wcisniesz esc to kończysz grę i program
+        if 'escape' in event.getKeys():
+            print('quitting')
+            quit_program.set()
+        if quit_program.is_set():
+            break
+
+        keys = pg.key.get_pressed()
+
+        ##########################
+        # JEŚLI CHCESZ GRAĆ SPACJĄ
+        # zakomentuj linijki 240 i 243
+        ##########################
+
+        if keys[pg.K_SPACE]:
+
+        ##########################
+        #JEŚLI MRUGNIĘCIAMI
+        #zakomentuj 233
+        ##########################
+
+#        if blink.value == 1:
+
+#            print('BLINK!')
+#            blink.value = 0
+            pg.time.delay(1000)
+            if (cnt-rnd<0):
+                score = 10 - ((cnt-rnd)*(-1))
+            else:
+                score = 10 - (cnt-rnd)
+#            print("score: ")
+#            print(score)
+            score = str(score)
+            result = font.render("Twój wynik to:", True, green, black)
+            scr = font.render(score, True, green, black)
+            rRect = result.get_rect()
+            sRect = scr.get_rect()
+            rRect.center = (X // 2, Y * (3/4))
+            sRect.center = (X // 2, Y * (7/8))
+            win.blit(result, rRect)
+            win.blit(scr, sRect)
+            pg.display.flip()
+            pg.time.delay(3000)
+
         sec2 = int(pg.time.get_ticks()/1000)
         #jeśli czas który upłynął między sec1 a sec2 to 1 sekunda:
         if sec2 - sec1 == 1:
             sec1 = sec2
             cnt += 1
             print(cnt)
-            #zamiana zmiennej cnt z int na string
             cnt = str(cnt)
             #aktualizacja zmiennej text
             text = font.render(cnt, True, green, black)
-            #nałożenie prostokąta z tekstem na okienko
-            win.blit(text, textRect)
-            #odświeżenie okienka
+            textRect2 = text.get_rect()
+            textRect2.center = (X // 2, Y // 2)
+            win.blit(text, textRect2)
             pg.display.flip()
             #zamiana z string na int
             cnt = int(cnt)
