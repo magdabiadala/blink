@@ -95,7 +95,7 @@ if __name__ == "__main__":
     white = (255, 255, 255)
     yellow = (255, 255, 0)
 #ustaw prędkość na 1 lub więcej (do 50 jest ok)
-    speed = 5
+    speed = 50
     spd = 1000/speed
     start = 2 * speed
     stop = 9 * speed
@@ -229,7 +229,7 @@ if __name__ == "__main__":
                 break
 
             sec2 = int(pg.time.get_ticks()/spd)
-            #jeśli czas który upłynął między sec1 a sec2 to 1 sekunda:
+            #jeśli czas który upłynął między sec1 a sec2 to 1 sekunda (dla speed = 1)
             if sec2 - sec1 == 1:
                 sec1 = sec2
                 cnt += 1
