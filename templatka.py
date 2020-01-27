@@ -149,7 +149,7 @@ if __name__ == "__main__":
     #odświeżenie okienka
     pg.display.flip()
     #czeka 5 sekund - czas na przeczytanie
-    pg.time.delay(1000)
+    pg.time.delay(5000)
 
     #wyświetla czarny ekran po instrukcji
     pg.draw.rect(win, black, (0, 0, 800, 400))
@@ -230,17 +230,17 @@ if __name__ == "__main__":
         # zakomentuj linijki 240 i 243
         ##########################
 
-        if keys[pg.K_SPACE]:
+#        if keys[pg.K_SPACE]:
 
         ##########################
         #JEŚLI MRUGNIĘCIAMI
         #zakomentuj 233
         ##########################
 
-#        if blink.value == 1:
+        if blink.value == 1:
 
 #            print('BLINK!')
-#            blink.value = 0
+            blink.value = 0
             pg.time.delay(1000)
             if (cnt-rnd<0):
                 score = 10 - ((cnt-rnd)*(-1))
