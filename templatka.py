@@ -160,7 +160,7 @@ if __name__ == "__main__":
 
     #instrukcja
     ins_txt1 = "Mrugnij, gdy licznik będzie równy"
-    ins_txt2 = "czerwonej liczbie na górze okienka."
+    ins_txt2 = "zielonej liczbie na górze okienka."
     ins_txt3 = "Naciśnij escape, jeśli chcesz zakończyć."
     show(ins_txt1, green, X//2,100)
     show(ins_txt2, green, X//2, 170)
