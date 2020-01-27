@@ -81,28 +81,6 @@ if __name__ == "__main__":
     # Poniżej należy dodać rozwinięcie programu
     ############################################
 
-#stary program liczący mrugnięcia
-    '''win = visual.Window([400,400])
-    message = visual.TextStim(win, text='init')
-    message.autoDraw = True
-    win.flip()
-    core.wait(2.0)
-
-    cnt_blinks = 0
-
-    while True:
-        if blink.value == 1:
-            print('BLINK!')
-            blink.value = 0
-            cnt_blinks +=1
-            message.setText(str(cnt_blinks))
-            win.flip()
-        if 'escape' in event.getKeys():
-            print('quitting')
-            quit_program.set()
-        if quit_program.is_set():
-            break'''
-
 ### ZMIENNE ###
 
     run = True
@@ -114,10 +92,59 @@ if __name__ == "__main__":
     green = (0, 255, 0)
     black = (0, 0, 0)
     red = (255, 0, 0)
-    #losuje liczbę
-    rnd = random.randint(3, 10)
-    #zamienia ją na stringa
-    number = str(rnd)
+    white = (255, 255, 255)
+    yellow = (255, 255, 0)
+#ustaw prędkość na 1 lub więcej (do 50 jest ok)
+    speed = 5
+    spd = 1000/speed
+    start = 2 * speed
+    stop = 9 * speed
+
+### FUNKCJE ###
+
+    ### FUNKCJA WYŚWIETLAJĄCA NAPIS ###
+    #content - napis lub wartość do wyświetlenia
+    #colour - kolor napisu
+    #cX - środek napisu na osi x
+    #cY - środek napisu na osi y
+
+    def show(content, colour, cX, cY):
+        if isinstance(content, str):
+            text = font.render(content, True, colour, black)
+            tRect = text.get_rect()
+            tRect.center = (cX, cY)
+            win.blit(text, tRect)
+            pg.display.flip()
+        elif isinstance(content, int):
+            content = str(content)
+            show(content, colour, cX, cY)
+
+    ### FUNKCJA ZAKRYWAJĄCA NAPIS ###
+    #sX - lewy, górny róg na osi x
+    #sY - lewy, górny róg na osi y
+    #wide - szerokość
+    #height - wysokość
+
+    def hide(sX, sY, wide, height):
+        pg.draw.rect(win, black, (sX, sY, wide, height))
+        pg.display.flip()
+
+    ### ODLICZANIE ###
+
+    def countdown():
+        i = 1
+        l = 3
+        show("Odliczanie", white, X//2, Y//2)
+        pg.time.delay(1000)
+        hide(0, 150, 800, 250)
+        while i<4:
+            show(l, white, X//2, Y//2)
+            pg.time.delay(1000)
+            l -=1
+            i +=1
+        show("START", white, X//2, Y//2)
+        pg.time.delay(1000)
+        hide(0, 150, 800, 250)
 
 ### INICJALIZACJA GRY ###
 
@@ -134,149 +161,80 @@ if __name__ == "__main__":
     #instrukcja
     ins_txt1 = "Mrugnij, gdy licznik będzie równy"
     ins_txt2 = "czerwonej liczbie na górze okienka."
-    #wygląd instrukcji
-    instructions1 = font.render(ins_txt1, True, green, black)
-    instructions2 = font.render(ins_txt2, True, green, black)
-    #umieszcza instrukcję na prostokącie
-    insRect1 = instructions1.get_rect()
-    insRect2 = instructions2.get_rect()
-    #umieszcza prostokąt z tekstem na środku okienka
-    insRect1.center = (X // 2, Y // 3)
-    insRect2.center = (X // 2, Y * (2/3))
-    #nałożenie instrukcji na prostokąt (warstwy)
-    win.blit(instructions1, insRect1)
-    win.blit(instructions2, insRect2)
-    #odświeżenie okienka
-    pg.display.flip()
+    show(ins_txt1, green, X//2, Y//3)
+    show(ins_txt2, green, X//2, Y *(2/3))
     #czeka 5 sekund - czas na przeczytanie
-    pg.time.delay(5000)
-
+    pg.time.delay(3000)
     #wyświetla czarny ekran po instrukcji
-    pg.draw.rect(win, black, (0, 0, 800, 400))
-    pg.display.flip()
+    hide(0, 0, X, Y)
     pg.time.delay(1000)
-
-    #wyświetla wylosowaną liczbę
-    ran_num = font.render(number, True, red, black)
-    textRect1 = ran_num.get_rect()
-    textRect1.center = (X // 2, Y // 4)
-    win.blit(ran_num, textRect1)
-    pg.display.flip()
-    pg.time.delay(1000)
-
-### ODLICZANIE ###
-    i = 1
-    l = 3
-    countdown = font.render("Odliczanie", True, green, black)
-    cRect = countdown.get_rect()
-    cRect.center = (X // 2, Y // 2)
-    win.blit(countdown, cRect)
-    pg.display.flip()
-    pg.time.delay(1000)
-    pg.draw.rect(win, black, (0, 150, 800, 250))
-    pg.display.flip()
-    while i<4:
-        l = str(l)
-        licznik = font.render(l, True, green, black)
-        rect = licznik.get_rect()
-        rect.center = (X // 2, Y // 2)
-        win.blit(licznik, rect)
-        pg.display.flip()
-        pg.time.delay(1000)
-        l = int(l)
-        l -=1
-        i +=1
-    start = font.render("START", True, green, black)
-    sRect = start.get_rect()
-    sRect.center = (X // 2, Y // 2)
-    win.blit(start, sRect)
-    pg.display.flip()
-    pg.time.delay(1000)
-    pg.draw.rect(win, black, (0, 150, 800, 250))
-    pg.display.flip()
 
 ### GRA ###
 
-    text = font.render("", True, green, black)
-    textRect2 = text.get_rect()
-    textRect2.center = (X // 2, Y // 2)
-    win.blit(text, textRect2)
-    pg.display.flip()
-    #TU!
-    #get_ticks zwraca liczbę milisekund od wywołania pg.init()
-    sec1 = int(pg.time.get_ticks()/1000)
-#    print(pg.time.get_ticks())
-
-    blink.value = 0
-    print(blink.value)
-
     while run:
-        #stara wersja wychodzenia z gry
-        '''for event in pg.event.get():
-            if event.type == pg.QUIT:
-                run = False'''
-
-        # jeśli wcisniesz esc to kończysz grę i program
         if 'escape' in event.getKeys():
             print('quitting')
             quit_program.set()
         if quit_program.is_set():
             break
 
-        keys = pg.key.get_pressed()
+        #losuje liczbę
+        rnd = random.randint(start, stop)
+        #wyświetla wylosowaną liczbę
+        show(rnd, green, X//2, Y//4)
+        pg.time.delay(1000)
+        countdown()
 
-        ##########################
+        show("", white, X//2, Y//2)
+        cnt = 0
+        #get_ticks zwraca liczbę milisekund od wywołania pg.init()
+        sec1 = int(pg.time.get_ticks()/spd)
+
+        blink.value = 0
+#        print(blink.value)
+
+        while True:
+            # jeśli wcisniesz esc to kończysz grę i program
+            if 'escape' in event.getKeys():
+                print('quitting')
+                quit_program.set()
+            if quit_program.is_set():
+                run = 0
+                break
+
         # JEŚLI CHCESZ GRAĆ SPACJĄ
-        # zakomentuj linijki 240 i 243
-        ##########################
 
-#        if keys[pg.K_SPACE]:
+            keys = pg.key.get_pressed()
+            if keys[pg.K_SPACE]:
 
-        ##########################
         #JEŚLI MRUGNIĘCIAMI
-        #zakomentuj 233
-        ##########################
 
-        if blink.value == 1:
+#            if blink.value == 1:
+#                blink.value = 0
 
-#            print('BLINK!')
-            blink.value = 0
-            pg.time.delay(1000)
-            if (cnt-rnd<0):
-                score = 10 - ((cnt-rnd)*(-1))
-            else:
-                score = 10 - (cnt-rnd)
-#            print("score: ")
-#            print(score)
-            score = str(score)
-            result = font.render("Twój wynik to:", True, green, black)
-            scr = font.render(score, True, green, black)
-            rRect = result.get_rect()
-            sRect = scr.get_rect()
-            rRect.center = (X // 2, Y * (3/4))
-            sRect.center = (X // 2, Y * (7/8))
-            win.blit(result, rRect)
-            win.blit(scr, sRect)
-            pg.display.flip()
-            pg.time.delay(3000)
+        #######################
 
-        sec2 = int(pg.time.get_ticks()/1000)
-        #jeśli czas który upłynął między sec1 a sec2 to 1 sekunda:
-        if sec2 - sec1 == 1:
-            sec1 = sec2
-            cnt += 1
-            print(cnt)
-            cnt = str(cnt)
-            #aktualizacja zmiennej text
-            text = font.render(cnt, True, green, black)
-            textRect2 = text.get_rect()
-            textRect2.center = (X // 2, Y // 2)
-            win.blit(text, textRect2)
-            pg.display.flip()
-            #zamiana z string na int
-            cnt = int(cnt)
+                pg.time.delay(1000)
+                if (cnt - rnd != 0):
+                    if (cnt - rnd < 0):
+                        score = (cnt - rnd)*(-1)
+                    else:
+                        score = cnt - rnd
+                    show("Pomyliłeś się o:", red, X//2, Y *(3/4))
+                    show(score, red, X//2, Y *(7/8))
+                else:
+                    show("BRAWO!", yellow, X//2, Y *(3/4))
+                pg.time.delay(3000)
+                hide(0, 0, X, Y)
+                break
 
-
+            sec2 = int(pg.time.get_ticks()/spd)
+            #jeśli czas który upłynął między sec1 a sec2 to 1 sekunda:
+            if sec2 - sec1 == 1:
+                sec1 = sec2
+                cnt += 1
+#                print(cnt)
+                show(cnt, white, X//2, Y//2)
 
     pg.quit()
 
