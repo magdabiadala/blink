@@ -161,8 +161,10 @@ if __name__ == "__main__":
     #instrukcja
     ins_txt1 = "Mrugnij, gdy licznik będzie równy"
     ins_txt2 = "czerwonej liczbie na górze okienka."
-    show(ins_txt1, green, X//2, Y//3)
-    show(ins_txt2, green, X//2, Y *(2/3))
+    ins_txt3 = "Naciśnij escape, jeśli chcesz zakończyć."
+    show(ins_txt1, green, X//2,100)
+    show(ins_txt2, green, X//2, 170)
+    show(ins_txt3, yellow, X//2, 300)
     #czeka 5 sekund - czas na przeczytanie
     pg.time.delay(3000)
     #wyświetla czarny ekran po instrukcji
