@@ -95,7 +95,7 @@ if __name__ == "__main__":
     white = (255, 255, 255)
     yellow = (255, 255, 0)
 #ustaw prędkość na 1 lub więcej (do 50 jest ok)
-    speed = 50
+    speed = 5
     spd = 1000/speed
     start = 2 * speed
     stop = 9 * speed
@@ -206,13 +206,13 @@ if __name__ == "__main__":
 
         # JEŚLI CHCESZ GRAĆ SPACJĄ
 
-            keys = pg.key.get_pressed()
-            if keys[pg.K_SPACE]:
+  #          keys = pg.key.get_pressed()
+ #           if keys[pg.K_SPACE]:
 
         #JEŚLI MRUGNIĘCIAMI
 
-#            if blink.value == 1:
-#                blink.value = 0
+            if blink.value == 1:
+                blink.value = 0
 
         #######################
 
